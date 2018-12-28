@@ -9,7 +9,6 @@ docker create \
   --env COMMAND="sync" \
   --env COMMAND_OPTS="-v" \
   --env CRON="0 * * * *" \
-  --env CRON_ENABLED="1" \
   --env DESTINATION="gdrive:media" \
   --env HEALTH_URL=http://example.com/asdf1234 \
   --env SOURCE=/source \
@@ -25,7 +24,6 @@ The parameters are split into two halves, separated by a colon, the left hand si
 --env COMMAND - The command to run. Defaults to "sync"
 --env COMMAND_OPTS - additional options for rclone command. Defaults to `-v`
 --env CRON - cron schedule, defaults to hourly
---env CRON_ENABLED - Defaults to "1". If disabled, rclone will run once when container is started
 --env DESTINATION - The destination on the rclone remote
 --env HEALTH_URL - monitoring service url to GET after a successful rclone command
 --env SOURCE - The local source directory
