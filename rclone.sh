@@ -31,7 +31,8 @@ find "$SOURCE" -mindepth 2 -depth -not -path '*/\.*' -type d -exec rmdir -p --ig
 
 if [[ ! -z "$RCLONE_RC_URL" ]]; then
     echo "$( date +'%Y/%m/%d %H:%M:%S' ) Storing cached directories"
-    find "$SOURCE" -type f -exec dirname {} \; | sort | uniq > /tmp/rclone-cached-dirs.txt
+    cd "$SOURCE"
+    find . -type f -exec dirname {} \; | grep -v "\.unionfs" | sort | uniq > /tmp/rclone-cached-dirs.txt
 fi
 
 echo -e "$( date +'%Y/%m/%d %H:%M:%S' ) rclone $CONFIG_OPTS $COMMAND $COMMAND_OPTS $SOURCE $DESTINATION"
@@ -45,7 +46,7 @@ fi
 if [[ ! -z "$RCLONE_RC_URL" ]]; then
     echo "$( date +'%Y/%m/%d %H:%M:%S' ) Expiring Rclone cache for recently uploaded files"
     while read dir; do
-        curl --request POST --data-urlencode="remote=$dir" $RCLONE_RC_URL
+        curl --silent --request POST --data-urlencode "remote=$dir" "$RCLONE_RC_URL/cache/expire"
     done </tmp/rclone-cached-dirs.txt
 fi
 rm -f /tmp/rclone-cached-dirs.txt
