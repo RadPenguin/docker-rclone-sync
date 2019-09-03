@@ -38,11 +38,6 @@ fi
 echo -e "$( date +'%Y/%m/%d %H:%M:%S' ) rclone $CONFIG_OPTS $COMMAND $COMMAND_OPTS $SOURCE $DESTINATION"
 rclone $CONFIG_OPTS $COMMAND $COMMAND_OPTS "$SOURCE" "$DESTINATION"
 
-if [[ ! -z "$HEALTH_URL" ]]; then
-  echo "$( date +'%Y/%m/%d %H:%M:%S' ) Pinging $HEALTH_URL"
-  curl --silent $HEALTH_URL
-fi
-
 if [[ ! -z "$RCLONE_RC_URL" ]]; then
     echo "$( date +'%Y/%m/%d %H:%M:%S' ) Expiring Rclone cache for recently uploaded files"
     while read dir; do
@@ -50,3 +45,9 @@ if [[ ! -z "$RCLONE_RC_URL" ]]; then
     done </tmp/rclone-cached-dirs.txt
 fi
 rm -f /tmp/rclone-cached-dirs.txt
+
+if [[ ! -z "$HEALTH_URL" ]]; then
+  echo "$( date +'%Y/%m/%d %H:%M:%S' ) Pinging $HEALTH_URL"
+  curl --silent $HEALTH_URL
+fi
+
