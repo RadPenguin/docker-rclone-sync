@@ -29,6 +29,11 @@ lock || exit 1
 echo "$( date +'%Y/%m/%d %H:%M:%S' ) Tidying empty directories in $SOURCE"
 find "$SOURCE" -mindepth 2 -depth -not -path '*/\.*' -type d -exec rmdir -p --ignore-fail-on-non-empty {} \;
 
+if [[ ! -z "$RCLONE_RC_URL" ]]; then
+    echo "$( date +'%Y/%m/%d %H:%M:%S' ) Storing cached directories"
+    find "$SOURCE" -type f -exec dirname {} \; | sort | uniq > /tmp/rclone-cached-dirs.txt
+fi
+
 echo -e "$( date +'%Y/%m/%d %H:%M:%S' ) rclone $CONFIG_OPTS $COMMAND $COMMAND_OPTS $SOURCE $DESTINATION"
 rclone $CONFIG_OPTS $COMMAND $COMMAND_OPTS "$SOURCE" "$DESTINATION"
 
@@ -36,3 +41,11 @@ if [[ ! -z "$HEALTH_URL" ]]; then
   echo "$( date +'%Y/%m/%d %H:%M:%S' ) Pinging $HEALTH_URL"
   curl --silent $HEALTH_URL
 fi
+
+if [[ ! -z "$RCLONE_RC_URL" ]]; then
+    echo "$( date +'%Y/%m/%d %H:%M:%S' ) Expiring Rclone cache for recently uploaded files"
+    while read dir; do
+        curl --request POST --data-urlencode="remote=$dir" $RCLONE_RC_URL
+    done </tmp/rclone-cached-dirs.txt
+fi
+rm -f /tmp/rclone-cached-dirs.txt

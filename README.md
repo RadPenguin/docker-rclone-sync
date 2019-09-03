@@ -11,6 +11,7 @@ docker create \
   --env CRON="0 * * * *" \
   --env DESTINATION="gdrive:media" \
   --env HEALTH_URL=http://example.com/asdf1234 \
+  --env RCLONE_RC_URL=http://example.com:5572 \
   --env SOURCE=/source \
   --env TZ="America/Edmonton" \
   --volume <path to data>:/config \
@@ -26,6 +27,7 @@ The parameters are split into two halves, separated by a colon, the left hand si
 --env CRON - cron schedule, defaults to hourly
 --env DESTINATION - The destination on the rclone remote
 --env HEALTH_URL - monitoring service url to GET after a successful rclone command
+--env RCLONE_RC_URL - the URL that rclone rc is running on
 --env SOURCE - The local source directory
 --env TZ - the timezone to use for the cron and log. Defaults to `America/Edmonton`
 ```
