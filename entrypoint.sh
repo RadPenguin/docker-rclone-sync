@@ -17,7 +17,7 @@ fi
 echo "" > /rclone.log
 
 echo "$( date +'%Y/%m/%d %H:%M:%S' ) Running rclone"
-/rclone.sh >> /rclone.log 2>&1
+/rclone.sh >> /rclone.log 2>&1 &
 
 # Setup a crontab for the root user
 echo "$( date +'%Y/%m/%d %H:%M:%S' ) Setting up cron"
