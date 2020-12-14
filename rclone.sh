@@ -41,7 +41,6 @@ rclone $CONFIG_OPTS $COMMAND $COMMAND_OPTS "$SOURCE" "$DESTINATION"
 if [[ ! -z "$RCLONE_RC_URL" ]]; then
     echo "$( date +'%Y/%m/%d %H:%M:%S' ) Expiring Rclone cache for recently uploaded files"
     while read dir; do
-        curl --silent --request POST --data-urlencode "remote=$dir" "$RCLONE_RC_URL/cache/expire"
         curl --silent --request POST --data-urlencode "dir=$dir" "$RCLONE_RC_URL/vfs/forget"
     done </tmp/rclone-cached-dirs.txt
 fi
